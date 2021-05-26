@@ -1,278 +1,417 @@
 <template>
   <div class="article-container">
-    <el-card class="filter-card">
-      <div slot="header">
-        <!-- 面包屑路径导航 -->
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-          <el-breadcrumb-item to="/">首页</el-breadcrumb-item>
-          <el-breadcrumb-item>内容管理</el-breadcrumb-item>
-        </el-breadcrumb>
-        <!-- /面包屑路径导航 -->
+    <!-- 导航栏 -->
+    <van-nav-bar
+      class="page-nav-bar"
+      left-arrow
+      title="IT头条"
+      @click-left="$router.back()"
+    ></van-nav-bar>
+    <!-- /导航栏 -->
+
+    <div class="main-wrap">
+      <!-- 加载中 -->
+      <div v-if="loading" class="loading-wrap">
+        <van-loading
+          color="#3296fa"
+          vertical
+        >加载中</van-loading>
       </div>
-      <!-- 数据筛选表单 -->
-      <el-form label-width="40px" size="mini">
-        <el-form-item label="状态">
-          <el-radio-group v-model="status">
-            <!--
-              el-radio 默认把 label 作为文本和选中之后的 value 值
-             -->
-            <el-radio :label="null">全部</el-radio>
-            <el-radio :label="0">草稿</el-radio>
-            <el-radio :label="1">待审核</el-radio>
-            <el-radio :label="2">审核通过</el-radio>
-            <el-radio :label="3">审核失败</el-radio>
-            <el-radio :label="4">已删除</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="频道">
-          <el-select v-model="channelId" placeholder="请选择频道">
-            <el-option
-              label="全部"
-              :value="null"
-            ></el-option>
-            <el-option
-              :label="channel.name"
-              :value="channel.id"
-              v-for="(channel, index) in channels"
-              :key="index"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="日期">
-          <el-date-picker
-            v-model="rangeDate"
-            type="datetimerange"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            :default-time="['00:00:00', '23:59:59']"
-            format="yyyy-MM-dd"
-            value-format="yyyy-MM-dd"
+      <!-- /加载中 -->
+
+      <!-- 加载完成-文章详情 -->
+      <div v-else-if="article.title" class="article-detail">
+        <!-- 文章标题 -->
+        <h1 class="article-title">{{ article.title }}</h1>
+        <!-- /文章标题 -->
+
+        <!-- 用户信息 -->
+        <van-cell class="user-info" center :border="false">
+          <van-image
+            class="avatar"
+            slot="icon"
+            round
+            fit="cover"
+            :src="article.aut_photo"
           />
-        </el-form-item>
-        <el-form-item>
-          <!--
-            button 按钮的 click 事件有个默认参数
-            当你没有指定参数的时候，它会默认传递一个没用的数据
-           -->
-          <el-button
-            type="primary"
-            :disabled="loading"
-            @click="loadArticles(1)"
-          >查询</el-button>
-        </el-form-item>
-      </el-form>
-      <!-- /数据筛选表单 -->
-    </el-card>
+          <div slot="title" class="user-name">{{ article.aut_name }}</div>
+          <div slot="label" class="publish-date">{{ article.pubdate | relativeTime }}</div>
+          <follow-user
+            class="follow-btn"
+            v-model="article.is_followed"
+            :user-id="article.aut_id"
+          />
+        </van-cell>
+        <!-- /用户信息 -->
 
-    <el-card class="box-card">
-      <div slot="header" class="clearfix">
-        根据筛选条件共查询到 {{ totalCount }} 条结果：
+        <!-- 文章内容 -->
+        <div
+          class="article-content markdown-body"
+          v-html="article.content"
+          ref="article-content"
+        ></div>
+        <van-divider>正文结束</van-divider>
+
+        <!-- 文章评论列表 -->
+        <comment-list
+          :source="article.art_id"
+          :list="commentList"
+          @onload-success="totalCommentCount = $event.total_count"
+          @reply-click="onReplyClick"
+        />
+        <!-- /文章评论列表 -->
+
+        <!-- 底部区域 -->
+        <div class="article-bottom">
+          <van-button
+            class="comment-btn"
+            type="default"
+            round
+            size="small"
+            @click="isPostShow = true"
+          >写评论</van-button>
+          <van-icon
+            class="comment-icon"
+            name="comment-o"
+            :badge="totalCommentCount"
+          />
+          <collect-article
+            class="btn-item"
+            v-model="article.is_collected"
+            :article-id="article.art_id"
+          />
+          <like-article
+            class="btn-item"
+            v-model="article.attitude"
+            :article-id="article.art_id"
+          />
+          <van-icon name="share" color="#777777"></van-icon>
+        </div>
+        <!-- /底部区域 -->
+
+        <!-- 发布评论 -->
+        <van-popup
+          v-model="isPostShow"
+          position="bottom"
+        >
+          <comment-post
+            :target="article.art_id"
+            @post-success="onPostSuccess"
+          />
+        </van-popup>
+        <!-- 发布评论 -->
       </div>
-      <!-- 数据列表 -->
-      <el-table
-        :data="articles"
-        stripe
-        style="width: 100%"
-        class="list-table"
-        size="mini"
-        v-loading="loading"
-      >
-        <el-table-column
-          label="封面">
-          <template slot-scope="scope">
-            <el-image
-              style="width: 100px; height: 100px"
-              :src="scope.row.cover.images[0]"
-              fit="cover"
-              lazy
-            >
-              <div slot="placeholder">
-                加载中
-              </div>
-            </el-image>
-            <!-- <img
-              v-if="scope.row.cover.images[0]"
-              class="article-cover"
-              :src="scope.row.cover.images[0]" alt=""
-            >
-            <img v-else class="article-cover" src="./no-cover.gif" alt=""> -->
-            <!--
-              下面这种情况是在运行期间动态改变处理的。
-              而本地图片必须在打包的时候就存在。
-             -->
-            <!-- <img
-              class="article-cover"
-              :src="scope.row.cover.images[0] || './no-cover.gif'" alt=""
-            > -->
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="title"
-          label="标题">
-        </el-table-column>
-        <el-table-column
-          label="状态">
-          <template slot-scope="scope">
-            <el-tag :type="articleStatus[scope.row.status].type">{{ articleStatus[scope.row.status].text }}</el-tag>
-            <!-- <el-tag v-if="scope.row.status === 0" type="warning">草稿</el-tag>
-            <el-tag v-else-if="scope.row.status === 1">待审核</el-tag>
-            <el-tag v-else-if="scope.row.status === 2" type="success">审核通过</el-tag>
-            <el-tag v-else-if="scope.row.status === 3" type="danger">审核失败</el-tag>
-            <el-tag v-else-if="scope.row.status === 4" type="info">已删除</el-tag> -->
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="pubdate"
-          label="发布时间">
-        </el-table-column>
-        <el-table-column
-          label="操作">
-          <template slot-scope="scope">
-            <el-button
-              size="mini"
-              circle
-              icon="el-icon-edit"
-              type="primary"
-              @click="$router.push('/publish?id=' + scope.row.id)"
-            ></el-button>
-            <el-button
-              size="mini"
-              type="danger"
-              icon="el-icon-delete"
-              circle
-              @click="onDeleteArticle(scope.row.id)"
-            ></el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <!-- /数据列表 -->
+      <!-- /加载完成-文章详情 -->
 
-      <!-- 列表分页 -->
-      <!--
-        total 用来设定总数据的条数
-        page-size 是每页显示条目个数，支持 .sync 修饰符，默认每页 10 条
-       -->
-      <el-pagination
-        layout="prev, pager, next"
-        background
-        :total="totalCount"
-        :page-size="pageSize"
-        :disabled="loading"
-        :current-page.sync="page"
-        @current-change="onCurrentChange"
+      <!-- 加载失败：404 -->
+      <div v-else-if="errStatus === 404" class="error-wrap">
+        <van-icon name="failure" />
+        <p class="text">该资源不存在或已删除！</p>
+      </div>
+      <!-- /加载失败：404 -->
+
+      <!-- 加载失败：其它未知错误（例如网络原因或服务端异常） -->
+      <div v-else class="error-wrap">
+        <van-icon name="failure" />
+        <p class="text">内容加载失败！</p>
+        <van-button
+          class="retry-btn"
+          @click="loadArticle"
+        >点击重试</van-button>
+      </div>
+      <!-- /加载失败：其它未知错误（例如网络原因或服务端异常） -->
+    </div>
+
+    <!-- 评论回复 -->
+    <!--
+      弹出层是懒渲染的：只有在第一次展示的时候才会渲染里面的内容，之后它的关闭和显示都是在切换内容的显示和隐藏
+     -->
+    <van-popup
+      v-model="isReplyShow"
+      position="bottom"
+      style="height: 100%;"
+    >
+      <comment-reply
+        v-if="isReplyShow"
+        :comment="currentComment"
+        @close="isReplyShow = false"
       />
-      <!-- /列表分页 -->
-    </el-card>
+    </van-popup>
+    <!-- /评论回复 -->
   </div>
 </template>
 
 <script>
-import {
-  getArticles,
-  getArticleChannels,
-  deleteArticle
-} from '@/api/article'
+import './github-markdown.css'
+import { ImagePreview } from 'vant'
+
+import { getArticleById } from '@/api/article'
+
+import FollowUser from '@/components/follow-user'
+import CollectArticle from '@/components/collect-article'
+import LikeArticle from '@/components/like-article'
+import CommentList from './components/comment-list'
+import CommentPost from './components/comment-post'
+import CommentReply from './components/comment-reply'
 
 export default {
   name: 'ArticleIndex',
-  components: {},
-  props: {},
-  data () {
+  components: {
+    FollowUser,
+    CollectArticle,
+    LikeArticle,
+    CommentList,
+    CommentPost,
+    CommentReply
+  },
+  // 给所有的后代组件提供数据
+  // 注意：不要滥用
+  provide: function () {
     return {
-      articles: [], // 文章数据列表
-      articleStatus: [
-        { status: 0, text: '草稿', type: 'info' }, // 0
-        { status: 1, text: '待审核', type: '' }, // 1
-        { status: 2, text: '审核通过', type: 'success' }, // 2
-        { status: 3, text: '审核失败', type: 'warning' }, // 3
-        { status: 4, text: '已删除', type: 'danger' } // 4
-      ],
-      totalCount: 0, // 总数据条数
-      pageSize: 10, // 每页大小
-      status: null, // 查询文章的状态，不传就是全部
-      channels: [], // 文章频道列表
-      channelId: null, // 查询文章的频道
-      rangeDate: null, // 筛选的范围日期
-      loading: true, // 表单数据加载中 loading
-      page: 1 // 当前页码
+      articleId: this.articleId
     }
   },
-  computed: {},
-  watch: {},
+  props: {
+    articleId: {
+      type: [Number, String, Object],
+      required: true
+    }
+  },
+  data () {
+    return {
+      article: {}, // 文章详情
+      loading: true, // 加载中的 loading 状态
+      errStatus: 0, // 失败的状态码
+      followLoading: false,
+      totalCommentCount: 0,
+      isPostShow: false, // 控制发布评论的显示状态
+      commentList: [], // 评论列表
+      isReplyShow: false,
+      currentComment: {} // 当前点击回复的评论项
+    }
+  },
   created () {
-    this.loadChannels()
-    // 页面初始化，加载第一页
-    this.loadArticles(1)
+    console.log('article created')
+    this.loadArticle()
   },
   mounted () {},
   methods: {
-    loadArticles (page = 1) {
-      // 展示加载中 loading
+    async loadArticle () {
+      // 展示 loading 加载中
       this.loading = true
-      getArticles({
-        page,
-        per_page: this.pageSize,
-        status: this.status,
-        channel_id: this.channelId,
-        begin_pubdate: this.rangeDate ? this.rangeDate[0] : null, // 开始日期
-        end_pubdate: this.rangeDate ? this.rangeDate[1] : null // 截止日期
-      }).then(res => {
-        const { results, total_count: totalCount } = res.data.data
-        this.articles = results
-        this.totalCount = totalCount
-        // 关闭加载中 loading
-        this.loading = false
+      try {
+        const { data } = await getArticleById(this.articleId)
+
+        // if (Math.random() > 0.5) {
+        //   JSON.parse('dsankljdnskaljndlkjsa')
+        // }
+
+        // 数据驱动视图这件事儿不是立即的
+        this.article = data.data
+
+        // 初始化图片点击预览
+        // this.$nextTick(() => {
+        //   this.previewImage()
+        // })
+        setTimeout(() => {
+          this.previewImage()
+        }, 0)
+      } catch (err) {
+        if (err.response && err.response.status === 404) {
+          this.errStatus = 404
+        }
+      }
+      // 无论成功还是失败，都需要关闭 loading
+      this.loading = false
+    },
+
+    previewImage () {
+      // 得到所有的 img 节点
+      const articleContent = this.$refs['article-content']
+      const imgs = articleContent.querySelectorAll('img')
+
+      // 获取所有 img 地址
+      const images = []
+      imgs.forEach((img, index) => {
+        images.push(img.src)
+
+        // 给每个 img 注册点击事件，在处理函数中调用预览
+        img.onclick = () => {
+          ImagePreview({
+            // 预览的图片地址数组
+            images,
+            // 起始位置，从 0 开始
+            startPosition: index
+          })
+        }
       })
     },
 
-    onSubmit () {
-      console.log('submit!')
+    onPostSuccess (data) {
+      // 关闭弹出层
+      this.isPostShow = false
+      // 将发布内容显示到列表顶部
+      this.commentList.unshift(data.new_obj)
     },
 
-    onCurrentChange (page) {
-      this.loadArticles(page)
-    },
+    onReplyClick (comment) {
+      this.currentComment = comment
 
-    loadChannels () {
-      getArticleChannels().then(res => {
-        this.channels = res.data.data.channels
-      })
-    },
-
-    onDeleteArticle (articleId) {
-      console.log(articleId)
-      console.log(articleId.toString())
-      this.$confirm('确认删除吗？', '删除提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        deleteArticle(articleId.toString()).then(res => {
-          // 删除成功，更新当前页的文章数据列表
-          this.loadArticles(this.page)
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
-      })
+      // 显示评论回复弹出层
+      this.isReplyShow = true
     }
   }
 }
 </script>
 
 <style scoped lang="less">
-.filter-card {
-  margin-bottom: 30px;
-}
+.article-container {
+  .main-wrap {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: #fff;
+  }
 
-.list-table {
-  margin-bottom: 20px;
-}
+  .loading-wrap {
+    padding: 200px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+  }
 
-.article-cover {
-  width: 60px;
-  background-size: cover;
+  .article-detail {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 92px;
+    bottom: 88px;
+    overflow-y: scroll;
+    background-color: #fff;
+    .article-title {
+      font-size: 40px;
+      padding: 50px 32px;
+      margin: 0;
+      color: #3a3a3a;
+    }
+
+    .user-info {
+      padding: 0 32px;
+      .avatar {
+        width: 80px;
+        height: 80px;
+        margin-right: 17px;
+      }
+      .van-cell__label {
+        margin-top: 0;
+      }
+      .user-name {
+        font-size: 24px;
+        color: #3a3a3a;
+      }
+      .publish-date {
+        font-size: 23px;
+        color: #b7b7b7;
+      }
+      .follow-btn {
+        width: 170px;
+        height: 58px;
+      }
+    }
+
+    .article-content {
+      /deep/ p {
+        text-align: justify;
+      }
+    }
+
+    .markdown-body {
+      box-sizing: border-box;
+      min-width: 200px;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 45px;
+    }
+    @media (max-width: 767px) {
+      .markdown-body {
+        padding: 30px;
+      }
+    }
+  }
+
+  .error-wrap {
+    padding: 200px 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    .van-icon {
+      font-size: 122px;
+      color: #b4b4b4;
+    }
+    .text {
+      font-size: 30px;
+      color: #666666;
+      margin: 33px 0 46px;
+    }
+    .retry-btn {
+      width: 280px;
+      height: 70px;
+      line-height: 70px;
+      border: 1px solid #c3c3c3;
+      font-size: 30px;
+      color: #666666;
+    }
+  }
+
+  .article-bottom {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    box-sizing: border-box;
+    height: 88px;
+    border-top: 1px solid #d8d8d8;
+    background-color: #fff;
+    .comment-btn {
+      width: 282px;
+      height: 46px;
+      border: 2px solid #eeeeee;
+      font-size: 30px;
+      line-height: 46px;
+      color: #a7a7a7;
+    }
+    /deep/ .van-icon {
+      font-size: 40px;
+    }
+    .comment-icon {
+      top: 2px;
+      color: #777;
+      .van-info {
+        font-size: 16px;
+        background-color: #e22829;
+      }
+    }
+    .btn-item {
+      border: none;
+      padding: 0;
+      height: 40px;
+      line-height: 40px;
+      color: #777777
+    }
+    .collect-btn--collected {
+      color: #ffa500;
+    }
+    .like-btn--liked {
+      color: #e5645f;
+    }
+  }
 }
 </style>

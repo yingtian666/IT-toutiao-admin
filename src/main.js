@@ -1,30 +1,27 @@
-/**
- * 项目的启动入口
- */
-
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
+import store from './store'
 
-// 加载 element 组件库
-import ElementUI from 'element-ui'
+import Vant from 'vant'
+import 'vant/lib/index.css'
 
-// 加载 element 组件库的样式
-import 'element-ui/lib/theme-chalk/index.css'
+// 加载全局样式
+import './styles/index.less'
 
-// 加载 nprogress 的样式文件
-import 'nprogress/nprogress.css'
+// 加载动态设置 REM 基准值
+import 'amfe-flexible'
 
-// 全局注册 element 组件库
-Vue.use(ElementUI)
+// 加载 dayjs 初始化配置
+import './utils/dayjs'
+
+// 注册使用 Vant 组件库
+Vue.use(Vant)
 
 Vue.config.productionTip = false
 
-// 创建 Vue 根实例
-// 把 router 配置到根实例中
-// 通过 render 方法把 App 根组件渲染到 #app 入口节点
 new Vue({
   router,
+  store,
   render: h => h(App)
-  // el: '#app' // 等价于 $mount('#app')
 }).$mount('#app')

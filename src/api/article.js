@@ -1,95 +1,106 @@
 /**
- * 文章相关请求模块
+ * 文章请求模块
  */
 import request from '@/utils/request'
 
 /**
- * 获取文章列表
+ * 获取推荐文章列表
  */
 export const getArticles = params => {
   return request({
     method: 'GET',
-    url: '/mp/v1_0/articles',
-    // Body 参数使用 data 设置
-    // Query 参数使用 params 设置
-    // Headers 参数使用 headers 设置
+    url: '/app/v1_1/articles',
+    // GET 参数使用 params 进行传递
+    // 我们写的时候是对象，但是最终发给后端的数据是？
+    // axios 会把 params 对象转为 key=value?key=value 的格式放到 url 中发送
     params
   })
 }
 
 /**
- * 获取文章频道
+ * 获取文章
  */
-export const getArticleChannels = () => {
+export const getArticleById = articleId => {
   return request({
     method: 'GET',
-    url: '/mp/v1_0/channels'
+    url: `/app/v1_0/articles/${articleId}`
   })
 }
 
 /**
- * 删除文章
+ * 收藏文章
  */
-export const deleteArticle = articleId => {
-  return request({
-    method: 'DELETE',
-    url: `/mp/v1_0/articles/${articleId}`
-  })
-}
-
-/**
- * 新建文章
- */
-export const addArticle = (data, draft = false) => {
+export const addCollect = target => {
   return request({
     method: 'POST',
-    url: '/mp/v1_0/articles',
-    params: {
-      draft: draft // 是否存为草稿（true 为草稿）
-    },
-    data
+    url: '/app/v1_0/article/collections',
+    data: {
+      target
+    }
   })
 }
-// 有默认值的情况下：addArticle(123)这种方式好传值  addArticle( , 123)这种方式不好传
-// 所以把 data 放前面
 
 /**
- * 编辑文章
+ * 取消收藏文章
  */
-export const updateArticle = (articleId, data, draft = false) => {
+export const deleteCollect = target => {
   return request({
-    method: 'PUT',
-    url: `/mp/v1_0/articles/${articleId}`,
-    params: {
-      draft // 是否存为草稿（true 为草稿）
-    },
-    data
+    method: 'DELETE',
+    url: `/app/v1_0/article/collections/${target}`
   })
 }
 
 /**
- * 获取指定文章
+ * 点赞文章
  */
-export const getArticle = articleId => {
+export const addLike = target => {
+  return request({
+    method: 'POST',
+    url: '/app/v1_0/article/likings',
+    data: {
+      target
+    }
+  })
+}
+
+/**
+ * 取消点赞文章
+ */
+export const deleteLike = target => {
+  return request({
+    method: 'DELETE',
+    url: `/app/v1_0/article/likings/${target}`
+  })
+}
+
+/* 获取当前用户的文章列表
+ */
+export const getCurrentUserArticles = params => {
   return request({
     method: 'GET',
-    url: `/mp/v1_0/articles/${articleId}`
+    url: '/app/v1_0/user/articles',
+    params
   })
 }
 
 /**
- * 修改文章评论状态
+ * 获取用户的收藏列表
  */
-export const updateCommentStatus = (articleId, allowComment) => {
+export const getCollectArticles = params => {
   return request({
-    method: 'PUT',
-    url: '/mp/v1_0/comments/status',
-    params: {
-      // 对象的属性名不受代码规范限制
-      article_id: articleId
-    },
-    data: {
-      allow_comment: allowComment
-    }
+    method: 'GET',
+    url: '/app/v1_0/article/collections',
+    params
+  })
+}
+
+/**
+ * 获取用户的历史记录
+ */
+export const getHistoryArticles = params => {
+  return request({
+    method: 'GET',
+    url: '/app/v1_0/user/histories',
+    params
   })
 }

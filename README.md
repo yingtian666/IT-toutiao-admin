@@ -1,69 +1,83 @@
-## Vue.js PC端项目--IT头条内容发布管理系统
+## Vue.js 移动端项目--IT头条
 
 ### 1. 项目简介
 
-> 一个类似于[今日头条自媒体头条号](http://mp.toutiao.com/profile_v3/index)的内容发布管理系统。
+> 基于 Vue.js 开发的移动端项目——IT头条(仿今日头条)
 >
-> 本项目采用前后端分离的开发模式，使用 Vue.js 技术栈和 Element组件库构建的PC端单页面应用程序
+> 本项目采用前后端分离的开发模式，使用 Vue.js 技术栈和 vant组件库 构建的移动端 SPA 单页面应用程序。
 > 
-**线上地址**：  http://toutiao-admin.xunta.space/#/login
-
-**相关资源**：  [Vue.js 移动端项目--IT头条](https://github.com/feng-yu-jian/IT-toutiao)
+> 接口来源于开源接口，该接口不支持https，所以我没有部署到GitHub Pages，不过可以完美的在本地运行，你可以clone下来自己体验一下
+> 
+> 后续会购买服务器并部署，现在没时间部署，见谅
+> 
+**相关资源**：  [Vue.js PC端项目--IT头条内容发布管理系统](https://github.com/feng-yu-jian/IT-toutiao-admin)
 
 项目已经完成功能如下：
 
-**登录**
+**个人中心**
 
-![登录.png](https://i.loli.net/2021/02/26/uSAg5wY7DmyLZ9f.png)
+  - 登录/退出
+  - 展示当前登录用户信息
+  - 个人信息(头像、昵称、、性别、生日)的编辑
+  - 我的收藏
+  - 我的历史
+  - 我的作品
 
-**内容管理**
-
-  + 文章筛选
-  + 编辑/删除文章
-
-![内容管理.png](https://i.loli.net/2021/02/26/L8esmO1dw6ct3yJ.png)
-
-**素材管理**
-
-  + 收藏/删除素材
-
-![素材管理.png](https://i.loli.net/2021/02/26/BIY5HUPV4GiXT7O.png)
-
-**发布文章**
-
-  + 支持MarkDown
-
-  + 文章封面
-  + 发表/存入草稿
-
-![发布文章.png](https://i.loli.net/2021/02/26/FLK7XjbDuseGVUz.png)
-
-**评论管理**
-
-  + 关闭/打开文章评论
-
-![评论管理.png](https://i.loli.net/2021/02/26/372uDIgU1Lq4TrS.png)
-
-**个人设置**
-
-  + 更换个人信息
-  + 更换头像
-
-![个人设置.png](https://i.loli.net/2021/02/26/UuK8LWQIcvRMymk.png)
+![个人中心.png](https://i.loli.net/2021/02/26/jGKCdVXpAUt6QmW.png)
 
 
 
-### 2.技术栈
+**首页**
+   -  频道列表
+   -  频道编辑
+   -  文章列表
+
+![首页.png](https://i.loli.net/2021/02/26/A6aFkrP3vVc2mLW.png)
+
+
+
+**搜索**
+   -  联想建议
+   -  搜索历史记录
+   -  搜索结果
+
+![搜索结果.png](https://i.loli.net/2021/02/26/oqmunStx9bcFwR7.png)
+
+
+
+**文章详情**
+   -  关注用户
+   -  文章收藏
+   -  文章点赞
+
+![文章详情.png](https://i.loli.net/2021/02/26/wV5eUYja7h2bRoT.png)
+
+
+
+**文章评论**
+   -  文章评论
+   -  评论回复
+   -  发布文章评论
+   -  发布评论回复
+   -  评论点赞
+
+![评论.png](https://i.loli.net/2021/02/26/UZadMSncgrFDzGV.png)
+
+
+
+### 2. 技术栈
 
 1. 基于 `Vue.js` 的前端框架
 
 1. 基于 `webpack` 工程化开发解决方案
 
-1. 基于 `Element` 的前端 `UI` 组件库，开发效率更高
+1. 基于 `Vant` 的前端 `UI` 组件库，开发效率更高
 
 1. 基于 `axios` 的请求库
 
 1. 基于 `RESTful` 风格的数据 `API` 解决方案
+
+1. 基于 `JWT` 的 `Token` 状态维持解决方案
 
 1. 基于 `Vue Router` 的路由管理方案
 
@@ -71,16 +85,20 @@
 
 1. 基于 `Vue CLI` 的脚手架工具，快速创建项目快速开发
 
+1. 基于 `PostCSS` 的移动端 REM 适配解决方案
 
 
 
 ### 3. 项目概览
 
-- 对文章内容的删除和编辑
-- 素材管理的收藏、删除和上传
-- 发布文章
-- 评论的管理
-- 个人资料的修改
+- 基于 Token 的验证方案处理用户登录
+- 移动端表单验证方案及交互提示
+- 用户中心、个人资料展示
+- 对文章内容的收藏、点赞和分享
+- 列表类页面的加载、缓存及优化
+- 列表类页面的下拉刷新和上拉加载更多
+- 资讯类文章详情展示和文章评论
+- 完整的搜索业务：输入联想建议、搜索关键词高亮、搜索历史记录、搜索结果列表
 
 
 
@@ -91,7 +109,7 @@
 clone项目：
 
 ```
-git clone https://github.com/feng-yu-jian/IT-toutiao-admin.git
+git clone https://github.com/feng-yu-jian/IT-toutiao.git
 ```
 
 安装项目依赖：
@@ -114,263 +132,383 @@ npm run build  |   yarn build
 
 
 
+### 5. 展望
+
+后续会完成如下功能
+
+-  消息通知
+-  小爱同学
+   -  展示聊天消息列表
+   -  发送/接收消息
+
+
+
 
 
 ### 解决方案详解
 
-#### 1.使用请求拦截器统一设置用户 Token
+#### 1. 移动端 REM 适配
 
-> axios 拦截器官方示例：https://github.com/axios/axios#interceptors
+Vant 中的样式默认使用 `px` 作为单位，如果需要使用 `rem` 单位，请使用以下两个工具：
 
-在 request 请求模块中添加如下代码：
+- [lib-flexible](https://github.com/amfe/lib-flexible) 用于设置 rem 基准值
+- [postcss-pxtorem](https://github.com/cuth/postcss-pxtorem) 是一款 postcss 插件，用于将px转化为 rem
 
-```js
-// 请求拦截器
-request.interceptors.request.use(
-  // 任何所有请求会经过这里
-  // config 是当前请求相关的配置信息对象,是可以修改的
-  function (config) {
-    const user = JSON.parse(window.localStorage.getItem('user'))
+**一、使用 [lib-flexible](https://github.com/amfe/lib-flexible) 动态设置 REM 基准值（html 标签的字体大小）**
 
-    // 如果有登录用户信息，则统一设置 token
-    if (user) {
-      config.headers.Authorization = `Bearer ${user.token}`
-    }
-    // 当这里 return config 之后请求才会真正的发出去
-    return config
-  },
-  function (error) {
-    return Promise.reject(error)
-  }
-)
-```
-
-
-
-#### 2.控制页面访问权限
-
-除了登录页面，其它所有页面都需要具有登录状态才能访问。
-
-这里使用[路由的导航守卫]([https://router.vuejs.org/zh/guide/advanced/navigation-guards.html)来统一处理。
-
-在 `src/router/index.js` 中：
-
-```js
-// beforeEach 是全局前置守卫，任何页面的访问都要经过这里
-router.beforeEach((to, from, next) => {
-  const user = JSON.parse(window.localStorage.getItem('user'))
-  // 校验非登录页面的登录状态
-  if (to.path !== '/login') {
-    if (user) {
-      // 已登录，允许通过
-      next()
-    } else {
-      // 没有登录，跳转到登录页面
-      next('/login')
-    }
-  } else {
-    // 登录页面，正常允许通过
-    next()
-  }
-})
-```
-
-> 关于路由导航守卫更详细的用户请参考官方文档：[https://router.vuejs.org/zh/guide/advanced/navigation-guards.html
-
-
-
-#### 3.结合导航守卫实现页面切换顶部进度条
-
-- [nprogress](https://github.com/rstacruz/nprogress)
-- 路由前置钩子
-- 路由后置钩子
-
-1、安装 nprogress
-
-```bash
-npm i nprogress
-```
-
-2、在 `main.js` 中引入 `nprogress.css` 样式文件
-
-```js
-// 加载 nprogress 中的指定的样式文件
-import 'nprogress/nprogress.css'
-```
-
-3、在路由的全局前置守卫中，开启进度条
-
-在 `src/router/index.js` 中：
-
-```js
-+ import NProgress from 'nprogress'
-router.beforeEach((to, from, next) => {
-  // 开启顶部导航进度条特效
-+ NProgress.start()
-
-  const user = JSON.parse(window.localStorage.getItem('user'))
-  if (to.path !== '/login') {
-    if (user) {
-      next()
-    } else {
-      next('/login')
-    }
-  } else {
-    next()
-  }
-})
-```
-
-4、在路由的全局后置钩子中，关闭进度条特效
-
-```js
-router.afterEach((to, from) => {
-  // 结束顶部的导航进度条
-  NProgress.done();
-});
-```
-
-
-
-#### 4.解决后端返回数据中的大数字问题
-
-JavaScript 能够准确表示的整数范围在`-2^53`到`2^53`之间（不含两个端点），超过这个范围，无法精确表示这个值，这使得 JavaScript 不适合进行科学和金融方面的精确计算。
-
-[json-bigint](https://github.com/sidorares/json-bigint) 是一个第三方包，它可以帮我们很好的处理这个问题。
-
-> 解决思路：
->
-> Axios 会在内部使用 JSON.parse 把后端返回的数据转为 JavaScript 数据对象。
->
-> 所以解决思路就是：不要让 axios 使用 JSON.parse 来转换这个数据，而是使用 json-biginit 来做转换处理。
->
-> axios 提供了一个 API：transformResponse。
-
-首先把它安装到你的项目中。
+1、安装
 
 ```shell
-npm i json-bigint
+npm i amfe-flexible
 ```
 
-下面是使用它的一个简单示例。
+2、然后在 `main.js` 中加载执行该模块
 
 ```javascript
-import JSONbig from 'json-bigint'
-
-const str = '{ "id": 1253585734669959168 }'
-
-console.log(JSON.parse(str)) // 1253585734669959200
-
-// 它会把超出 JS 安全整数范围的数字转为一种类型为 BigNumber 的对象
-// 我们在使用的时候需要把这个 BigNumber.toString() 就能得到原来正确的数据
-console.log(JSONbig.parse(str))
-console.log(JSONbig.parse(str).id.toString()) // 1253585734669959168
+import 'amfe-flexible'
 ```
 
-所以我们在 `src/utils/request.js` 请求模块中添加处理代码：
+**二、使用 [postcss-pxtorem](https://github.com/cuth/postcss-pxtorem) 将 `px` 转为 `rem`**
+
+1、安装
+
+```shell
+npm install postcss-pxtorem -D
+```
+
+2、然后在**项目根目录**中创建 `.postcssrc.js` 文件
+
+```javascript
+/**
+ * PostCSS 配置文件
+ */
+module.exports = {
+  plugins: {
+    'postcss-pxtorem': {
+      // postcss-pxtorem 处理每个 CSS 文件的时候都会来调用这个函数
+      // 它会把被处理的 CSS 文件相关的信息通过参数传递给该函数
+      rootValue ({ file }) {
+        return file.indexOf('vant') !== -1 ? 37.5 : 75
+      },
+      // 配置要转换的 CSS 属性
+      propList: ['*'],
+
+      // 配置不要转换的样式资源
+      exclude: 'github-markdown'
+    }
+  }
+}
+
+```
+
+**注意：**
+
+- 该插件**不能转换行内样式中的 `px`**，例如 `<div style="width: 200px;"></div>`
+
+
+
+#### 2. 处理用户 Token
+
+Token 是用户登录成功之后服务端返回的一个身份令牌，在项目中的多个业务中需要使用到：
+
+- 登录成功，将 Token 存储到 Vuex 容器中
+  - 获取方便
+  - 响应式
+- 为了**持久化**，把 Token 放到本地存储
+
+在 `src/store/index.js` 中
 
 ```js
+import Vue from 'vue'
+import Vuex from 'vuex'
+import { getItem, setItem } from '@/utils/storage'
+
+Vue.use(Vuex)
+
+const TOKEN_KEY = 'TOUTIAO_USER'
+
+export default new Vuex.Store({
+  state: {
+    // 一个对象，存储当前登录用户信息（token等数据）
+    user: getItem(TOKEN_KEY)
+  },
+  mutations: {
+    setUser (state, data) {
+      state.user = data
+      setItem(TOKEN_KEY, state.user)
+    }
+  }
+})
+
+```
+
+在 `src/utils/storage.js` 模块中设置localStorage
+
+``` js
+export const getItem = name => {
+  const data = window.localStorage.getItem(name)
+  try {
+    return JSON.parse(data)
+  } catch (err) {
+    return data
+  }
+}
+
+export const setItem = (name, value) => {
+  if (typeof value === 'object') {
+    value = JSON.stringify(value)
+  }
+  window.localStorage.setItem(name, value)
+}
+
+export const removeItem = name => {
+  window.localStorage.removeItem(name)
+}
+
+```
+
+
+
+#### 3. 使用请求拦截器统一添加 Token
+
+在 `src/utils/request.js` 中添加拦截器统一设置 token：
+
+```js
+/**
+ * 请求模块
+ */
 import axios from 'axios'
-import JSONbig from 'json-bigint'
+import store from '@/store'
 
 const request = axios.create({
-  baseURL: 'http://api-toutiao-web.itheima.net',
-
-  // 参数 data 就是后端返回的原始数据（未经处理的 JSON 格式字符串）
-  transformResponse: [function (data) {
-    try {
-      return JSONbig.parse(data)
-    } catch (err) {
-      console.log('转换失败', err)
-      return data
-    }
-  }]
+  baseURL: 'http://ttapi.research.itcast.cn/'
 })
+
+// 请求拦截器
+request.interceptors.request.use(function (config) {
+  // config ：本次请求的配置对象，里面有一个属性：headers
+  const { user } = store.state
+  if (user && user.token) {
+    config.headers.Authorization = `Bearer ${user.token}`
+  }
+  return config
+}, function (error) {
+  return Promise.reject(error)
+})
+
 export default request
 ```
 
 
 
-#### 5.富文本编辑器
+#### 4. 关于 Token 过期问题
 
-该项目使用的是基于 Vue 和 element 的富文本编辑器element-tiptap。
+概述：服务器生成token的过程中，会有两个时间，一个是token失效时间，一个是token刷新时间，刷新时间肯定比失效时间长，当用户的 `token` 过期时，拿着过期的token去换取新的token，来保持用户的登陆状态
 
-- GitHub 仓库：https://github.com/Leecason/element-tiptap
-- 在线示例：https://leecason.github.io/element-tiptap
-- 中文文档：https://github.com/Leecason/element-tiptap/blob/master/README_ZH.md
+处理流程：
 
-安装
+1. 在axios的**响应拦截器**中加入token刷新逻辑
+2. 当用户token过期时，去向服务器请求新的 token
+3. 把旧的token替换为新的token
+4. 然后继续用户当前的请求
 
-```shell
-npm i element-tiptap
+在请求的响应拦截器中统一处理 token 过期：
+
+在`src/utils/request.js` 中添加响应拦截器处理过期的token
+
+```js
+const refreshTokenReq = axios.create({
+  baseURL: 'http://ttapi.research.itcast.cn/'
+})
+
+// 请求拦截器
+request.interceptors.request.use(function (config) {
+  // config ：本次请求的配置对象，里面有一个属性：headers
+  const { user } = store.state
+
+  // 如果用户已登录，统一给接口设置 token 信息
+  if (user && user.token) {
+    config.headers.Authorization = `Bearer ${user.token}`
+  }
+  // 处理完之后一定要把 config 返回，否则请求就会停在这里
+  return config
+}, function (error) {
+  return Promise.reject(error)
+})
+
+// 响应拦截器
+request.interceptors.response.use(function (response) {
+  // 响应成功进入这里
+  return response
+}, async function (error) {
+  // 响应失败进入这里
+  const status = error.response.status
+  if (status === 400) {
+    Toast.fail('客户端请求参数异常')
+  } else if (status === 401) {
+    // token 无效
+    const { user } = store.state
+    if (!user || !user.refresh_token) {
+      // 直接跳转到登录页
+      return redirectLogin()
+    }
+    // 这里为啥使用 axios 请求刷新token?
+    // 如果我们使用 request 请求刷新 token, 则会走 request 的请求拦截器
+    // 如果 request 刷新token 失效了，还会进入 request 自己的响应拦截器中
+    try {
+      const { data } = await refreshTokenReq({
+        method: 'PUT',
+        url: '/app/v1_0/authorizations',
+        headers: {
+          Authorization: `Bearer ${user.refresh_token}`
+        }
+      })
+      // 拿到新的 token 之后把它更新到容器中
+      user.token = data.data.token
+      store.commit('setUser', user)
+
+      // 把失败的请求重新发出去
+      // error.config 是本次请求的相关配置信息对象
+      // 这里使用 request 发请求，它会走request的请求拦截器
+      return request(error.config)
+    } catch (err) {
+      // 刷新 token 失败了，直接跳转登录页
+      redirectLogin()
+    }
+  } else if (status === 403) {
+    Toast.fail('没有权限操作')
+  } else if (status >= 500) {
+    Toast.fail('服务端异常，请稍后重试')
+  }
+  return Promise.reject(error)
+})
 ```
 
 
 
-#### 6.禁用路由缓存
+#### 5. 关于第三方图片资源403问题
 
-发现一个小问题，从编辑文章导航到发布文章，表单内容并没有被清空，这是因为两个路由共用的同一个组件，两者之间相互跳转的时候，原来的组件实例会被复用。 因为两个路由都渲染同个组件，比起销毁再创建，复用则显得更加高效。**不过，这也意味着组件的生命周期钩子不会再被调用**。
+为什么文章列表数据中的好多图片资源请求失败返回 403？
 
-路由默认提供的这个功能的用意是好的，但是有时候却会带来问题，解决方案就是：**禁用缓存**。
+- 这是因为项目的接口数据是后端通过爬虫抓取的第三方平台内容，而第三方平台对图片资源做了防盗链保护处理。
 
-在路由出口 `router-view` 上添加一个唯一的 `key` 即可。
+第三方平台怎么处理图片资源保护的？
 
-> 详细内容请查阅官方文档：[响应路由参数的变化](<[https://router.vuejs.org/zh/guide/essentials/dynamic-matching.html#%E5%93%8D%E5%BA%94%E8%B7%AF%E7%94%B1%E5%8F%82%E6%95%B0%E7%9A%84%E5%8F%98%E5%8C%96](https://router.vuejs.org/zh/guide/essentials/dynamic-matching.html#响应路由参数的变化)>)。
+- 服务端一般使用 Referer 请求头识别访问来源，然后处理资源访问。
 
+- Referer 是什么东西？
 
+> 扩展参考：http://www.ruanyifeng.com/blog/2019/06/http-referer.html
 
-#### 7.非父子组件通信
+怎么解决？
 
-通过事件总线Events Bus让非父子组件通信
-
-1、创建 `src/utils/global-bus.js` 并写入
-
-```js
-import Vue from "vue";
-
-// 直接导出一个空的 Vue 实例
-export default new Vue();
+```
+不要发送 referrer
 ```
 
-2、使用 `global-bus` 通信
+直接在 HTMl 页面头中通过 meta 属性全局配置：
 
-在通信的 a 端初始化 `created` 的时候注册监听一个自定义事件：
-
-```js
-import eventBus from '@/utils/event-bus'
-
-export default {
-  ...
-  created () {
-  	// 参数1：一个字符串，自定义事件名称
-  	// 参数2：一个函数，事件发布以后就会调用
-  	eventBus.$on('自定义事件名称', () => {
-      // 业务逻辑代码
-    })
-
-    // 如果有参数的话，就声明接收
-    eventBus.$on('自定义事件名称', (arg) => {
-      // 业务逻辑代码
-    })
-	}
-}
+```
+<meta name="referrer" content="no-referrer" />
 ```
 
-在通信的 b 端发布调用自定义事件
+
+
+#### 6. 处理相对时间
+
+[Day.js](https://day.js.org/zh-CN/) 是一个轻量的处理时间和日期的仅 2kb 大小的 JavaScript 库，和 [Moment.js](https://momentjs.com/) 的 API 设计保持完全一样。
+
+1、安装
+
+```sh
+npm i dayjs
+```
+
+2、创建 `utils/dayjs.js`
 
 ```js
-import eventBus from '@/utils/event-bus'
+import Vue from 'vue'
+import dayjs from 'dayjs'
 
-export default {
-  ...
-  methods: {
-    // 在某个业务方法中
-    test () {
-      // 参数1：自定义事件名称，必须是订阅的名字一致
-      eventBus.$emit('自定义事件名称')
+// 加载中文语言包
+import 'dayjs/locale/zh-cn'
 
-      // 如果需要传递额外的数据参数，就从第2个参数开始传
-      eventBus.$emit('自定义事件名称', 123)
+import relativeTime from 'dayjs/plugin/relativeTime'
+
+// 配置使用处理相对时间的插件
+dayjs.extend(relativeTime)
+
+// 配置使用中文语言包
+dayjs.locale('zh-cn')
+
+// 全局过滤器：处理相对时间
+Vue.filter('relativeTime', value => {
+  return dayjs().to(dayjs(value))
+})
+
+```
+
+3、在 `main.js` 中加载初始化
+
+```js
+import './utils/dayjs'
+```
+
+4、使用
+
+使用过滤器：
+
+```html
+<p>{{ 日期数据 | relativeTime }}</p>
+```
+
+
+
+#### 7. 防抖优化
+
+1、安装 lodash
+
+```bash
+npm i lodash
+```
+
+2、防抖处理
+
+```js
+// lodash 支持按需加载，有利于打包结果优化
+import { debounce } from "lodash"
+```
+
+> 不建议下面这样使用，因为这样会加载整个模块。
+>
+> ```
+> import _ from 'lodash'
+> _.debounce()
+> ```
+
+```js
+watch: {
+  searchText: {
+    // debounce 函数
+    // 参数1：函数
+    // 参数2：延迟时间，单位是毫秒
+    // 返回值：防抖之后的函数
+    handler: debounce(function (value) {
+      this.loadSearchSuggestions(value)
+    }, 200),
+    // handler (value) {
+    //   this.loadSearchSuggestions(value)
+    // },
+    immediate: true // 该回调将会在侦听开始之后被立即调用
+  }
+},
+methods: {
+  async loadSearchSuggestions (q) {
+    try {
+      const { data } = await getSearchSuggestions(q)
+      this.suggestions = data.data.options
+    } catch (err) {
+      this.$toast('数据获取失败，请稍后重试')
     }
   }
 }
@@ -378,54 +516,79 @@ export default {
 
 
 
-#### 8.本地预览测试打包结果
+#### 8. 搜索关键字高亮
 
-```bash
-# yarn global add serve
-# 注意：这是在安装全局包，在任何目录执行都可以
-npm install -g serve
+1、在 methods 中添加一个方法处理高亮
+
+```js
+highlight (text) {
+  const highlightStr = `<span class="active">${this.searchText}</span>`
+
+  // RegExp 正则表达式构造函数
+  //    参数1：匹配模式字符串，它会根据这个字符串创建正则对象
+  //    参数2：匹配模式
+  const reg = new RegExp(this.searchText, 'gi')
+  return text.replace(reg, highlightStr)
+}
 ```
 
-然后在项目目录下执行：
+2、然后在联想建议列表项中绑定调用
 
-```bash
-# dist 是运行 Web 服务根目录
-serve -s dist
+```html
+<!-- 联想建议 -->
+<van-cell-group v-else-if="searchContent">
+  <van-cell
+    icon="search"
+    v-for="(item, index) in suggestions"
+    :key="index"
+    @click="onSearch(item)"
+  >
+    <div slot="title" v-html="highlight(item)"></div>
+  </van-cell>
+</van-cell-group>
+<!-- /联想建议 -->
 ```
 
-如果启动成功，你将看到如下提示：
 
+
+
+
+#### 9.关于后端返回数据中的大数字问题
+
+> json-bigint 会把超出 JS 安全整数范围的数字转为一个 BigNumber 类型的对象，我们要做的就是在使用的时候把BigNumber 类型的对象转为字符串来使用
+
+```js
+const jsonStr = '{ "art_id": 1245953273786007552 }'
+
+// JSONBig 可以处理数据中超出 JavaScript 安全整数范围的问题
+console.log(JSONBig.parse(jsonStr)) // 把 JSON 格式的字符串转为 JavaScript 对象
+
+// 使用的时候需要把 BigNumber 类型的数据转为字符串来使用
+console.log(JSONBig.parse(jsonStr).art_id.toString()) // 1245953273786007552
 ```
-   ┌────────────────────────────────────────────────────┐
-   │                                                    │
-   │   Serving!                                         │
-   │                                                    │
-   │   - Local:            http://localhost:5000        │
-   │   - On Your Network:  http://192.168.156.90:5000   │
-   │                                                    │
-   │   Copied local address to clipboard!               │
-   │                                                    │
-   └────────────────────────────────────────────────────┘
+
+通过 Axios 请求得到的数据都是 Axios 处理（JSON.parse）之后的，我们应该在 Axios 执行处理之前手动使用 json-bigint 来解析处理。Axios 提供了自定义处理原始后端返回数据的 API：`transformResponse` 
+
+```js
+import axios from 'axios'
+import jsonBig from 'json-bigint'
+
+const request = axios.create({
+  baseURL: 'http://ttapi.research.itcast.cn/',
+  // 处理原始后端返回数据
+  transformResponse: [function (data) {
+    // 后端返回的数据一般都是 JSON 格式的字符串,以防后端返回的数据可能不是 JSON 格式字符串
+    try {
+      // 如果转换成功，则直接把结果返回
+      return JSONbig.parse(data)
+    } catch (err) {
+      // 如果转换失败了，则进入这里
+      // 在这里把数据原封不动的直接返回给请求使用
+      return data
+    }
+  }]
+})
 ```
-
-> 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

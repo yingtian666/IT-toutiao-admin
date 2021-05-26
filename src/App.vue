@@ -1,19 +1,21 @@
 <template>
   <div id="app">
-    <!-- 路由出口 -->
-    <router-view/>
+    <keep-alive :include="cachePages">
+      <router-view/>
+    </keep-alive>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   name: 'App',
-  data () {
-    return {}
-  },
-  methods: {},
-  created () {}
+  computed: {
+    ...mapState(['cachePages'])
+  }
 }
 </script>
 
-<style lang="less"></style>
+<style lang="less">
+</style>
